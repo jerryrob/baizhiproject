@@ -1,4 +1,5 @@
 name='Jerry'
 print(name)
 age=20
+page=1
 print(age)
