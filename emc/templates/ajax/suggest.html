@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>suggest</title>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript">
+        $(function () {
+            //监听输入框的键盘(输入)事件
+            $("#suggest").keyup(function (e) {
+
+                $("#mention_ul").empty()
+                var name = $("#suggest").val();
+                if (name.length > 0) {
+                    var csrftoken = "{{ csrf_token }}";
+                    $.ajaxSetup({headers: {"X-CSRFToken": csrftoken}});
+                    $.ajax({
+                        type: "post",
+                        url: "{% url 'ajax:getName' %}",
+                        data: {"name": name},
+                        dataType: "json",
+                        success: function (result) {
+                            console.log(result)
+                            if (result) {
+                                $("#mention").slideDown(1000)
+                                var names = result
+                                for (i in names) {
+                                    $("#mention_ul").append("<li>" + names[i].username + "</li>")
+                                }
+                            } else {
+                                //$("#mention").slideUp(100)
+                                $("#mention").hide();
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
+    <style type="text/css">
+        #con {
+            width: 600px;
+            height: 200px;
+            margin: 0px auto;
+            text-align: center;
+            position: relative;
+        }
+
+        #mention {
+            width: 174px;
+            height: auto;
+            border: 1px solid #ADBECB;
+            display: none;
+            padding: 4px;
+            position: absolute;
+            top: 26px;
+            left: 50%;
+            margin-left: -92px;
+            min-height: 0px;
+        }
+
+        #suggest {
+            width: 172px;
+            padding: 4px;
+            margin: 0px;
+        }
+
+        ul li {
+            border: 0px;
+            list-style: none;
+            text-align: left;
+        }
+
+        ul {
+            margin: 0px;
+            padding: 0px;
+            width: 174px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="con">
+    <input type="text" id="suggest"/>
+    <div id="mention">
+        <ul id="mention_ul"></ul>
+    </div>
+</div>
+
+</body>
+</html>

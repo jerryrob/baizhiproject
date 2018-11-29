@@ -1,0 +1,60 @@
+<!DOCTYPE>
+<html>
+<head>
+{% load static %}
+    <meta charset="UTF-8">
+    <title>猫眼电影排行榜</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/film.css' %}" />
+</head>
+<body>
+<div id="top" class="bottom">
+    <p>猫眼电影排行榜</p>
+</div>
+<div id="con">
+    <ul>
+        {% for f in page.object_list%}
+        <li>
+        <table>
+            <tr><td rowspan="3">{{ f.index }}</td><td rowspan="3"><img src="/static/{{ f.image }}" /></td><td class="tit topt">《{{ f.title }}》</td><td rowspan="3" class="tit_score">{{ f.score }}</td></tr>
+            <tr><td  class="tit">演员：{{ f.actor }}</td></tr>
+            <tr><td  class="tit">上映时间：{{ f.time }}</td></tr>
+        </table>
+
+        </li>
+        {% endfor %}
+    </ul>
+    <div >
+        <div id="container">
+    <div id="page">
+        <a href="{%  url 'crawer:query' %}?num=1" class="n">首页</a>
+        {% if page.has_previous %}
+            <a href="{%  url 'crawer:query' %}?num={{ page.previous_page_number }}" class="n">&lt;上一页</a>
+        {% endif %}
+        {% for page_num in page.paginator.page_range %}
+            {% if page_num == page.number %}
+                <strong>
+                    <span class="fk fk_cur">
+                        <i class="c-icon c-icon-bear-p"></i>
+                    </span>
+                    <span class="pc">{{ page_num }}</span>
+                </strong>
+            {% else %}
+                <a href="{% url 'crawer:query' %}?num={{ page_num }}">
+		            <span class="fk fkd"><i class="c-icon c-icon-bear-pn"></i>
+		            </span><span class="pc">{{ page_num }}</span>
+                </a>
+            {% endif %}
+        {% endfor %}
+        {% if page.has_next %}
+            <a href="{%  url 'crawer:query' %}?num={{ page.next_page_number }}" class="n">下一页&gt;</a>
+        {% endif %}
+        <a href="{%  url 'crawer:query' %}?num={{page.paginator.num_pages}}" class="n">末页</a>
+
+    </div></div>
+    </div>
+</div>
+<div id="bottom" class="bottom">
+    <p>猫眼电影排行榜</p>
+</div>
+</body>
+</html>

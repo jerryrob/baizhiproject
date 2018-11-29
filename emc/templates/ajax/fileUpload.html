@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件上传</title>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script>
+        function uploada() {
+            xhr = new XMLHttpRequest()
+            xhr.open("post", "{% url "ajax:uploadFile" %}")
+            xhr.upload.onprogress = function (a) {//文件上传过程中会不断触发
+                if (a.loaded == a.total)//loaded已上传的字节数 ，total文件总字节数
+                    console.log("上传完成")
+            }
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    filepath = xhr.responseText;
+                    console.log(filepath)
+                    document.getElementById("img").src = "{% static '' %}" + filepath
+                }
+            }
+            xhr.send(new FormData(document.getElementById("fileForm")));
+        }
+        function upload() {
+            $("#img").hide();
+            $("#msg").hide();
+            //1.选择表单的dom对象
+            var fileForm = document.getElementById("fileForm");
+            //2.封装FormData
+            var formdata = new FormData(fileForm);
+            //3.xhr
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "{% url 'ajax:uploadFile' %}");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var ret = xhr.responseText;
+                    console.log(ret);
+                    $("#img").attr("src", "{% static '' %}" + ret);
+                }
+            };
+            //onprogress在上传的过程中，会不断触发
+            xhr.upload.onprogress = function (e) {
+                console.log(e.total + "   " + e.loaded);
+                var p=(e.loaded / e.total) * 100;
+
+                var w=260*(e.loaded / e.total);
+                $("#pin").css("width",w);
+                $("#info").html("上传进度：" + p.toFixed(2)+ "%");
+                if (e.total == e.loaded) {
+                    $("#img").show();
+                    $("#msg").attr("src", "{% static 'img/ajax/ok.gif' %}");
+                    setTimeout(function () {
+                        //$("#msg").hide();
+                        $("#pout").hide();
+                    }, 2000);
+                }
+            };
+            xhr.send(formdata);//等价与提交了form
+            $("#msg").show();
+            $("#pout").show();
+            $("#msg").attr("src", "{% static 'img/ajax/load.gif' %}")
+        }
+    </script>
+    <style type="text/css">
+        #msg {
+            width: 24px;
+            height: 24px;
+            border: 0px;
+            margin: 4px;
+            display: none;
+        }
+        #img{display: none;}
+
+        img{margin: 4px;}
+        #pout{width:260px;height:20px;border: 1px solid #5494F3;position: relative;display: none;}
+        #pin{width:0px;font-size:14px;height:100%;border: 0px;background:url({% static 'img/ajax/bg_1.png' %});color: #000000;float:left;text-align: center;}
+        #info{position: absolute;left:50%;margin-left:-65px;display: inline-block;width: 260px;}
+    </style>
+</head>
+<body>
+<div>
+    <form id="fileForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>文件名:</td>
+                <td><input type="text" name="name"/></td>
+            </tr>
+            <tr>
+                <td>文件：</td>
+                <td><input type="file" name="source"/><img id="msg"/><span id="progress"></span></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="上传" onclick="upload();"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="2"><div id="pout"><span id="info"></span><div id="pin"></div></div></td>
+            </tr>
+        </table>
+    </form>
+    <img id="img" src=""/>
+
+</div>
+</body>
+</html>

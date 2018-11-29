@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static  %}
+    <meta charset="UTF-8">
+    <title>json—test1</title>
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript">
+       function getUsers(){
+            var xhr = new XMLHttpRequest();
+            xhr.open("get","{% url 'user:jsonta' %}");
+            xhr.send();
+            xhr.onreadystatechange=function(){
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    ret = xhr.responseText;//json串 '[{"id":xx,"name":xx,"age":xx},{},{}]'
+                    var users=JSON.parse(ret).users//或str.parseJSON()或eval("("+ret+")")
+                    for (i in users){
+                         $("#tab").append("<tr><td>"+users[i].username+"</td><td>"+users[i].realname+"</td><td>"+users[i].gender+"</td><td>"+users[i].create_time+"</td></tr>")
+                    }
+                }
+            }
+       }
+       function ajax(){
+           var csrftoken="{{ csrf_token }}";
+           $.ajaxSetup({headers:{"X-CSRFToken":csrftoken}});
+           $.ajax({
+               type:"post",
+               url:"{% url 'user:jsonta' %}",
+               data:{},
+               dataType:"json",
+               success:function(result){
+                    console.log(result)     
+                    var users=result.users
+                    for (i in users){
+                         $("#tab").append("<tr><td>"+users[i].username+"</td><td>"+users[i].realname+"</td><td>"+users[i].gender+"</td><td>"+users[i].create_time+"</td></tr>")
+                    }
+               }
+           });
+             
+       }
+       function ajax2(){
+            var csrftoken = "{{csrf_token}}";
+            $.ajaxSetup({headers:{"X-CSRFToken":csrftoken}});
+            $.post(
+                "{% url 'user:jsonta' %}", //url
+                "name=zhj&age=18",//请求参数
+                function(result){//abc=xhr.responseText或js对象
+                    var users=result.users
+                    for (i in users){
+                         $("#tab").append("<tr><td>"+users[i].username+"</td><td>"+users[i].realname+"</td><td>"+users[i].gender+"</td><td>"+users[i].create_time+"</td></tr>")
+                    }
+                },
+                "json"
+            );
+       }
+       function ajax3(){
+             $.get(
+                "{% url 'user:jsonta' %}", //url
+                "name=zhj&age=18",//请求参数
+                function(result){//abc=xhr.responseText或js对象
+                    var users=result.users
+                    for (i in users){
+                         $("#tab").append("<tr><td>"+users[i].username+"</td><td>"+users[i].realname+"</td><td>"+users[i].gender+"</td><td>"+users[i].create_time+"</td></tr>")
+                    }
+                },
+                "json"
+            );
+       }
+    </script>
+</head>
+<body>
+    <input type="button" value="jsontest" onclick="getUsers()"/>
+    <table id="tab">
+
+    </table>
+    <input type="button"   onclick="ajax()" value="ajax1"/>
+    <input type="button"  onclick="ajax2()" value="ajax2"/>
+    <input type="button"   onclick="ajax3()" value="ajax3"/>
+</body>
+</html>

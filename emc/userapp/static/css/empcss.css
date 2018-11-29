@@ -1,0 +1,57 @@
+#rightheader{height:66px;width:260px;position: relative;}
+#myp span{float:left;}
+#myp{margin:0px;padding: 0px;margin:0px;}
+#head_img{width:60px;height:60px;border-radius: 50%;position: absolute;top:5px;right:5px;}
+#page strong .pc {
+    border: 0;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+}
+#page strong .fk, #page strong .pc {
+    cursor: auto;
+}
+#page .pc {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #e1e2e3;
+    cursor: pointer;
+}
+#page span {
+    display: block;
+}
+
+#page a, #page strong {
+    display: inline-block;
+    vertical-align: text-bottom;
+    height: 66px;
+    text-align: center;
+    line-height: 34px;
+    text-decoration: none;
+    overflow: hidden;
+    margin-right: 9px;
+    background: #fff;
+}
+strong, b {
+    font-weight: bold;
+}
+#page {
+    font: 14px arial;
+    white-space: nowrap;
+    padding-left: 35px;
+
+}
+.nv a, .nv b, .btn, #page, #more {
+    font-size: 14px;
+}
+body, th, td, .p1, .p2 {
+    font-family: arial;
+}
+body {
+    color: #333;
+}
+#container {
+    word-break: break-all;
+    word-wrap: break-word;
+    position: relative;
+}

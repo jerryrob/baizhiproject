@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ajax测试</title>
+{#    <script type="text/javascript" src="/static/js/jquery.min.js"></script>#}
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/ajaxUtil.js' %}"></script>
+    <script>
+        function ajax_get(path){
+            console.log(path);
+            var obj=$("#result")
+            var ret=ajax_send(path,{"name":"zhj","age":18},"get",obj);
+            obj.css("color","red");
+        }
+        function  ajax_post(path) {
+            var obj=$("#result2")
+            ajax_send(path,{"name":"zhj","age":18},"get",obj);
+            obj.css("color","red");
+        }
+    </script>
+</head>
+<body>
+    <input type="button" onclick='ajax_get("{% url 'user:test_1' %}")' value="send_ajax"/>
+    <span id="result">
+
+    </span>
+    <br/>
+    <input type="button" onclick='ajax_post("{% url 'user:test_2' %}")' value="send_post"/>
+    <span id="result2">
+
+    </span>
+</body>
+</html>

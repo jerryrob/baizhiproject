@@ -1,0 +1,99 @@
+{% extends 'empcms/super.html'%}
+{% block temp_tit %}
+     <title>listEmp</title>
+{% endblock %}
+{% block tit %}
+    {% load static %}
+    <div id="rightheader">
+        <p id="myp">
+            <span>欢迎您：{{ username }}&nbsp;&nbsp;&nbsp;2009/11/20</span><img id="head_img" src="{% static user_pic  %}" />
+            <br />
+        </p>
+    </div>
+{% endblock %}
+{% block  empcms%}
+    <div id="content">
+        <p id="whereami">
+        </p>
+        <h1>
+            {{ dept.name }}
+        </h1>
+        <table class="table" id="emp_table">
+            <tr class="table_header" style="text-align: center;"><td>ID</td><td>姓名</td><td>薪资</td><td>年龄</td><td>性别</td><td>生日</td><td>操作</td></tr>
+            {% for emp in page.object_list %}
+                 {% if  forloop.counter|divisibleby:'2'  %}
+		               <tr class="row2">
+                 {% else %}
+                      <tr class="row1">
+                 {% endif %}
+                <td>
+                    {{ emp.id }}
+                </td>
+                <td>
+                    {{ emp.name }}
+                </td>
+                <td>
+                     {{ emp.salary }}
+                </td>
+                <td>
+                     {{ emp.age }}
+                </td>
+                <td>
+                    {%if emp.gender %}
+                       男
+                    {%elif not emp.gender %}
+                        女
+                    {% endif %}
+                </td>
+                <td>
+                   {{ emp.birth|date:'Y-m-d' }}
+                </td>
+                <td>
+                    <a href="javascript:void(0)" onclick="del({{ emp.id }})">删除</a>&nbsp;<a href="{%url 'emp:empuptp' %}?id={{ emp.id }}">修改</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p>
+            <input type="button" class="button" value="添加" onclick="location='{%url 'emp:empaddp' %}'"/>
+        </p>
+    </div>
+    <div id="container">
+    <div id="page">
+        <a href="{%  url 'emp:empdetail' %}?deptId={{ dept.id }}&num=1" class="n">首页</a>
+        {% if page.has_previous %}
+            <a href="{%  url 'emp:empdetail' %}?deptId={{ dept.id }}&num={{ page.previous_page_number }}" class="n">&lt;上一页</a>
+        {% endif %}
+        {% for page_num in page.paginator.page_range %}
+            {% if page_num == page.number %}
+                <strong>
+                    <span class="fk fk_cur">
+                        <i class="c-icon c-icon-bear-p"></i>
+                    </span>
+                    <span class="pc">{{ page_num }}</span>
+                </strong>
+            {% else %}
+                <a href="{% url 'emp:empdetail' %}?deptId={{ dept.id }}&num={{ page_num }}">
+		            <span class="fk fkd"><i class="c-icon c-icon-bear-pn"></i>
+		            </span><span class="pc">{{ page_num }}</span>
+                </a>
+            {% endif %}
+        {% endfor %}
+        {% if page.has_next %}
+            <a href="{%  url 'emp:empdetail' %}?deptId={{ dept.id }}&num={{ page.next_page_number }}" class="n">下一页&gt;</a>
+        {% endif %}
+        <a href="{%  url 'emp:empdetail' %}?deptId={{ dept.id }}&num={{page.paginator.num_pages}}" class="n">末页</a>
+
+    </div></div>
+    <script type="text/javascript">
+        function del(id){
+            var isDel=confirm("确定删除？")
+            if(isDel){
+                location.href="{% url 'emp:empdel' %}?id="+id
+            }else{
+                console.log("取消删除")
+            }
+        }
+    </script>
+{% endblock %}
+

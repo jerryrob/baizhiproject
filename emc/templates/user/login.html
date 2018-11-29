@@ -1,0 +1,94 @@
+{% extends 'empcms/super.html'%}
+{% block temp_tit %}
+     <title>login</title>
+{% endblock %}
+{% block  empcms%}
+    <script type="text/javascript">
+        //刷新验证码
+        function refeshCode(){
+            $("#checkcode").attr("src","{% url 'user:code' %}?"+new Date().getTime());
+        }
+        function checkCode(path){
+            var args={"checkcode":$("#code").val()}
+            ajax_send(path,args,"get",$("#checkCodeImg"))
+        }
+        function submitForm(){
+            var r=$("#checkval").val();
+            if(r=="y"){
+                $("#userForm").submit();
+            }else{
+                console.log("数据不合法，无法提交！");
+            }
+        }
+    </script>
+    <div id="content">
+					<p id="whereami">
+					</p>
+					<h1>
+						用户登录
+					</h1>
+					<form id="userForm" action="{% url 'user:login' %}" method="post">
+                        {% csrf_token %}
+						<table cellpadding="0" cellspacing="0" border="0"
+							class="form_table">
+							<tr>
+								<td valign="middle" align="right">
+									用户名:
+								</td>
+								<td valign="middle" align="left">
+                                    <input type="hidden" id="checkval" value=""/>
+									<input type="text" class="inputgri" name="username" value="{{username|default:''}}"/>
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									密码:
+								</td>
+								<td valign="middle" align="left">
+									<input type="password" class="inputgri" name="password" value="{{ password|default:'' }}"/>
+								</td>
+							</tr>
+                            <tr>
+								<td valign="middle" align="right">
+									验证码:
+								</td>
+								<td valign="middle" align="left" style="position: relative;">
+									<input type="text" id="code" class="inputgri" onchange="checkCode('{% url "user:checkCode" %}')" name="checkcode" value="" style="width:70px;"/>
+                                    <img  id="checkcode" src="{%  url 'user:code'%}" style="height:24px;margin:0px 3px;position: absolute;top:5px;"/>
+                                    <a  href="javascript:void(0)" onclick="refeshCode()" style="float:right;padding-top:5px;">换一张</a>
+                                    <img id="checkCodeImg" class="checkImg" src="" style="position:absolute;right:-18px; "/>
+								</td>
+							</tr>
+                            <tr>
+								<td valign="middle" align="right" style="line-height:26px;text-align: center;">
+                                    {% if  remember == '1' %}
+                                        <input type="checkbox" name="remember" value="1" checked="checked"/>
+                                    {% else %}
+                                        <input type="checkbox" name="remember" value="1"/>
+                                    {% endif %}
+                                    <span style="line-height:24px;text-align: center;">记住我</span>
+								</td>
+								<td valign="middle" align="left">
+
+								</td>
+							</tr>
+                            <tr>
+                                <td colspan="2">
+                                    <p style="color:red;">
+                                    {% if request.session.msg %}
+                                        {{ request.session.msg }}
+                                    {% endif %}
+                                    {% if msg %}
+                                        {{  msg }}
+                                    {% endif %}
+                                    </p>
+                                </td>
+                            </tr>
+						</table>
+						<p>
+{#							<input type="submit" class="button" value="提交 &raquo;" />#}
+                            <input type="button" class="button" onclick="submitForm()" value="提交 &raquo;" />
+						</p>
+					</form>
+				</div>
+{% endblock %}

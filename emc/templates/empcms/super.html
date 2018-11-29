@@ -1,0 +1,44 @@
+<!DOCTYPE>
+<html>
+{% load static %}
+	<head>
+		{% block temp_tit %}{% endblock %}
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/default.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/empcss.css' %}" />
+        <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/ajaxUtil.js' %}"></script>
+
+    </head>
+
+	<body>
+		<div id="wrap">
+			<div id="top_content">
+					<div id="header">
+                        {% block tit %}
+                            <div id="rightheader">
+							<p>
+								2009/11/20&nbsp;&nbsp;Welcome!
+								<br />
+							</p>
+						</div>
+                        {% endblock %}
+						<div id="topheader">
+							<h1 id="title">
+								<a href="#">Main</a>
+							</h1>
+						</div>
+						<div id="navigation">
+						</div>
+					</div>
+				 {% block empcms %}{% endblock %}
+			</div>
+			<div id="footer">
+				<div id="footer_bg">
+					ABC@126.com
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

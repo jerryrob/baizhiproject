@@ -1,0 +1,104 @@
+{% extends 'empcms/super.html'%}
+{% block temp_tit %}
+     <title>addEmp</title>
+{% endblock %}
+{% block  empcms%}
+    <div id="content">
+        <p id="whereami">
+        </p>
+        <h1>
+            add Emp info:
+        </h1>
+        <form action="/empapp/emp/add/" method="post" name="empForm">
+            {% csrf_token%}
+            <table cellpadding="0" cellspacing="0" border="0"
+                class="form_table">
+                <tr>
+                    <td valign="middle" align="right">
+                        name:
+                    </td>
+                    <td valign="middle" align="left">
+
+                        <input id="name" type="text" class="inputgri" name="name" />
+                        <span style="color:red;" id="message"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        salary:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input id="salary" type="text" class="inputgri" name="salary" />
+                        <span style="color:red;" id="messalary"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        age:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input id="age" type="text" class="inputgri" name="age" />
+                        <span style="color:red;" id="mess_age"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        gender:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input id="gender" type="radio" class="inputgri" name="gender" value="1"/>男
+                        <input id="gender" type="radio" class="inputgri" name="gender" value="0"/>女
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="right">
+                        birth:
+                    </td>
+                    <td valign="middle" align="left">
+                        <input id="birth" type="text" class="inputgri" name="birth" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" >
+
+                    </td>
+                </tr>
+            </table>
+            <p>
+                <input type="button" class="button" onclick="commit()" value="确认" />
+{#                <input type="submit" class="button"   value="确认" />#}
+            </p>
+        </form>
+    </div>
+    <script>
+      function commit(){
+        var data = {};
+        var t = $('form').serializeArray();
+     $.each(t, function() {
+       data[this.name] = this.value;
+     });
+      // console.log(JSON.stringify(data)
+        if(isNaN(data.salary)){
+            $("#messalary").text("薪资必须是数字类型！");
+            return;
+        }else{
+            $("#messalary").text("");
+        }
+        if(isNaN(data.age)){
+            $("#mess_age").text("年龄必须是数字类型！");
+            return;
+        }else{
+            $("#mess_age").text("");
+        }
+        $.post("/empapp/emp/add/",data, function(data,status){
+            console.log(data)
+            if(status=="success"){
+                location.href="{%  url 'emp:empdetail' %}?num=1"
+            }else{
+                $("#message").text(data);
+            }
+
+        });
+      }
+    </script>
+{% endblock %}
