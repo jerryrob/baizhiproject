@@ -1,6 +1,0 @@
-name='Jerry'
-print(name)
-age=20
-page=12
-gender=1
-print(age)
